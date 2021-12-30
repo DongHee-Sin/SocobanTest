@@ -84,7 +84,8 @@ var stage2TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(
 
 
 
-// 문자열 배열을 입력받아서 콘솔에 맵 정보를 출력하는 함수
+/// 문자열 배열을 입력받아서 콘솔에 맵 정보를 출력하는 함수
+/// forEach를 사용하면 컨테이너의 요소들을 순차적으로 순환하면서 동작시키고 싶은 작업을 "클로저로" 넘겨줄 수 있음
 func printMapData(stageArray: [String]) {
     stageArray.forEach({print($0)})
 }
@@ -99,7 +100,9 @@ func intOptionalBinding(optionalValue: Int?)  -> Int{
 }
 
 
-// 맵 데이터의 가로크기 반환
+/// 맵 데이터의 가로크기 반환
+/// map으로 요소를 순환하면서 해당 요소가 가진 요소의 갯수(count)를 가지는 컨테이너를 생성
+/// 생성된 컨테이너의 요소중 가장 큰 값을 반환
 func calculateWidth(mapData: [[String.Element]]) -> Int {
     return intOptionalBinding(optionalValue: mapData.map({$0.count}).max())
 }
@@ -109,12 +112,16 @@ func calculateHeight(mapData: [[String.Element]]) -> Int {
     return mapData.count
 }
 
-// 맵 데이터의 구멍, 공의 수를 찾아서 반환
+/// 맵 데이터의 구멍, 공의 수를 찾아서 반환
+/// map으로 순환하는 요소에 filter를 사용하여 target의 갯수를 가지는 컨테이너를 생성
+/// 생성된 컨테이너의 요소들을 reduce를 통해 합산해서 반환
 func findNumber(mapData: [[String.Element]], target: String.Element) -> Int {
     return mapData.map({$0.filter({$0 == target}).count}).reduce(0, +)
 }
 
-// 맵 데이터에서 플레이어의 위치 반환
+/// 맵 데이터에서 플레이어의 위치 반환
+/// firstIndex(where:)  : 클로저를 파라미터로 전달
+/// firstIndex(of:)  : 그냥 값을 파라미터로 전달
 func findPlayerLocation(mapData: [[String.Element]]) -> (Int, Int) {
     let yLocation: Int = intOptionalBinding(optionalValue: mapData.firstIndex(where: {$0.contains("3")}))
     let xLocation: Int = intOptionalBinding(optionalValue: mapData[yLocation].firstIndex(of: "3"))
