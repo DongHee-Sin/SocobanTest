@@ -27,7 +27,7 @@ let dictionaryForReplace: [String: String] = ["#": "0", "O": "1", "o": "2", "P":
 /// $0 = stringToConvert (String)
 /// $1 = convertBy (Dictionary)
 /// 초기값을 stringToConvert로 사용하고, 클로저로 어떤 변화를 줄지 작성함
-func replaceString(stringToConvert: String, convertBy: [String: String]) -> String {
+func convertString(stringToConvert: String, convertBy: [String: String]) -> String {
     return convertBy.reduce(stringToConvert) {
         $0.replacingOccurrences(of: $1.key, with: $1.value)
     }
@@ -48,7 +48,7 @@ func addMapData(stage1: inout [String], stage2: inout [String], baseString: [Str
             continue
         }else if baseString[index] == "Stage 2" {
             isOverStage1 = true
-        }else if baseString[index] == "=====" {
+        }else if baseString[index] == "=====" || baseString[index] == "44444" {
             continue
         }else if isOverStage1 == false {
             stage1.append(baseString[index])
@@ -61,7 +61,7 @@ func addMapData(stage1: inout [String], stage2: inout [String], baseString: [Str
 
 /// 문자열 배열을 각 문자별로 잘라서 2차원 배열로 반환
 func convertStringArrayTo2DArray(_ inputStringArray: [String]) -> [[String.Element]] {
-    var twoDimensionalArray: [[String.Element]] = [[]]
+    var twoDimensionalArray: [[String.Element]] = [[String.Element]]()
 
     for index in 0...inputStringArray.count-1 {
         twoDimensionalArray.append(Array(inputStringArray[index]))
@@ -76,8 +76,11 @@ var stage1Array: [String] = [String]()
 var stage2Array: [String] = [String]()
 addMapData(stage1: &stage1Array, stage2: &stage2Array, baseString: separateStringBasedNewLine(mapData))
 
-var stage1TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(stage1Array)
-var stage2TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(stage2Array)
+var convertedStage1Array: [String] = [String]()
+var convertedStage2Array: [String] = [String]()
+addMapData(stage1: &convertedStage1Array, stage2: &convertedStage2Array, baseString: separateStringBasedNewLine(convertString(stringToConvert: mapData, convertBy: dictionaryForReplace)))
+var stage1TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(convertedStage1Array)
+var stage2TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(convertedStage2Array)
 
 
 
@@ -85,3 +88,63 @@ var stage2TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(
 func printMapData(stageArray: [String]) {
     stageArray.forEach({print($0)})
 }
+
+
+// 옵셔널 바인딩
+func intOptionalBinding(optionalValue: Int?)  -> Int{
+    guard let noneOptionalValue = optionalValue else {
+        fatalError()
+    }
+    return noneOptionalValue
+}
+
+
+// 맵 데이터의 가로크기 반환
+func calculateWidth(mapData: [[String.Element]]) -> Int {
+    return intOptionalBinding(optionalValue: mapData.map({$0.count}).max())
+}
+
+// 맵 데이터의 세로크기 반환
+func calculateHeight(mapData: [[String.Element]]) -> Int {
+    return mapData.count
+}
+
+// 맵 데이터의 구멍, 공의 수를 찾아서 반환
+func findNumber(mapData: [[String.Element]], target: String.Element) -> Int {
+    return mapData.map({$0.filter({$0 == target}).count}).reduce(0, +)
+}
+
+// 맵 데이터에서 플레이어의 위치 반환
+func findPlayerLocation(mapData: [[String.Element]]) -> (Int, Int) {
+    let yLocation: Int = intOptionalBinding(optionalValue: mapData.firstIndex(where: {$0.contains("3")}))
+    let xLocation: Int = intOptionalBinding(optionalValue: mapData[yLocation].firstIndex(of: "3"))
+    
+    return (xLocation+1, yLocation+1)
+}
+
+
+// 파라미터로 받는 스테이지의 정보를 출력
+func printStageInfo(_ mapData: [[String.Element]]) {
+    print("")
+    print("가로크기: \(calculateWidth(mapData: mapData))")
+    print("세로크기: \(calculateHeight(mapData: mapData))")
+    print("구멍의 수: \(findNumber(mapData: mapData, target: "1"))")
+    print("공의 수: \(findNumber(mapData: mapData, target: "2"))")
+    print("플레이어 위치: \(findPlayerLocation(mapData: mapData))")
+    print("")
+}
+
+
+
+// 1단계에서 요구하는 콘솔 출력하는 함수
+func printStep1() {
+    print("Stage 1\n")
+    printMapData(stageArray: stage1Array)
+    printStageInfo(stage1TwoDimentionalArray)
+    
+    print("Stage 2\n")
+    printMapData(stageArray: stage2Array)
+    printStageInfo(stage2TwoDimentionalArray)
+}
+
+printStep1()
