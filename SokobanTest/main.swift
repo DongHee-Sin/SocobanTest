@@ -33,6 +33,14 @@ func convertString(stringToConvert: String, convertBy: [String: String]) -> Stri
     }
 }
 
+/// 변환된 문자열로 구성된 1차원 배열을
+/// 변환되지 않은 문자열로 구성된 1차원 배열로 만들기 위한 함수
+/// (콘솔 출력을 위해)
+/// 매개변수로 convert2DArrayTo1DArray함수의 결과를 사용
+func convertStringArray(stringArrayToConvert: [String], convertBy: [String: String]) -> [String] {
+    return stringArrayToConvert.map({convertBy.reduce($0, {$0.replacingOccurrences(of: $1.value, with: $1.key)})})
+}
+
 
 // 입력된 문자열을 새로운 줄(\n)을 기준으로 분리하여 배열로 반환
 func separateStringBasedNewLine(_ inputString: String) -> [String] {
@@ -125,7 +133,7 @@ func findNumber(mapData: [[String.Element]], target: String.Element) -> Int {
 func findPlayerLocation(mapData: [[String.Element]]) -> (Int, Int) {
     let yLocation: Int = intOptionalBinding(optionalValue: mapData.firstIndex(where: {$0.contains("3")}))
     let xLocation: Int = intOptionalBinding(optionalValue: mapData[yLocation].firstIndex(of: "3"))
-    
+
     return (xLocation+1, yLocation+1)
 }
 
@@ -148,10 +156,72 @@ func printStep1() {
     print("Stage 1\n")
     printMapData(stageArray: stage1Array)
     printStageInfo(stage1TwoDimentionalArray)
-    
+
     print("Stage 2\n")
     printMapData(stageArray: stage2Array)
     printStageInfo(stage2TwoDimentionalArray)
 }
 
-printStep1()
+
+
+//func movePlayer(_ input: String.Element) {
+//    switch input {
+//    case "w":
+//        print("위")
+//    case "a":
+//        print("왼쪽")
+//    case "s":
+//        print("아래")
+//    case "d":
+//        print("오른쪽")
+//    default:
+//        print("(경고!) 해당 명령을 수행할 수 없습니다.")
+//    }
+//}
+
+
+
+// 2차원 배열을 출력을 위한 1차원 배열로 바꾸는 함수
+func convert2DArrayTo1DArray(_ twoDimentionArray: [[String.Element]]) -> [String] {
+    return twoDimentionArray.map({String($0)})
+}
+
+
+// 플레이어 이동 구현
+func gameStart() {
+    // 맵 정보 출력
+    printMapData(stageArray: stage2Array)
+
+    var playerInput: String = ""
+    var playerLocation: (Int, Int) = findPlayerLocation(mapData: stage2TwoDimentionalArray)
+
+    // 사용자가 q를 입력할 때까지 반복 수행
+    while true {
+        print("SOKOBAN> ", terminator: "")
+        playerInput = readLine() ?? ""
+        if playerInput == "q" {
+            print("Bye~")
+            break
+        }else {
+            playerInput.map({
+                switch $0 {
+                case "w":
+                    print("위")
+                    /// 1. 2차원 배열에서 플레이어가 있는 위치의 값을 ""(공란)으로 바꾸기
+                    /// 2. 함수 내부의 플레이어 좌표값을 바꾸기
+                    /// 3. 2에서 바꾼 좌표값을 바탕으로 2차원 배열에 P(플레이어) 넣기
+                    /// 4. 변경된 2차원 배열 출력하기
+                    /// 5. W: 위로 이동합니다. 출력
+                case "a":
+                    print("왼쪽")
+                case "s":
+                    print("아래")
+                case "d":
+                    print("오른쪽")
+                default:
+                    print("(경고!) 해당 명령을 수행할 수 없습니다.")
+                }
+            })
+        }
+    }
+}
