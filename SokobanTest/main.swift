@@ -95,7 +95,9 @@ var stage2TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(
 /// 문자열 배열을 입력받아서 콘솔에 맵 정보를 출력하는 함수
 /// forEach를 사용하면 컨테이너의 요소들을 순차적으로 순환하면서 동작시키고 싶은 작업을 "클로저로" 넘겨줄 수 있음
 func printMapData(stageArray: [String]) {
+    print("")
     stageArray.forEach({print($0)})
+    print("")
 }
 
 
@@ -138,7 +140,7 @@ func findPlayerLocation(mapData: [[String.Element]]) -> (Int, Int) {
 }
 
 
-// 파라미터로 받는 스테이지의 정보를 출력
+// 파라미터로 받은 스테이지의 정보를 출력
 func printStageInfo(_ mapData: [[String.Element]]) {
     print("")
     print("가로크기: \(calculateWidth(mapData: mapData))")
@@ -187,41 +189,110 @@ func convert2DArrayTo1DArray(_ twoDimentionArray: [[String.Element]]) -> [String
 }
 
 
+// 플레이어 위치를 사용하여 지도에 원하는 값 입력
+func enterValueOnMap(playerLocation: (Int, Int), valueToEnter: String.Element, mapData: inout[[String.Element]]) {
+    mapData[playerLocation.1-1][playerLocation.0-1] = valueToEnter
+}
+    
+
+// 플레이어가 원하는 위치로 이동할 수 없는 경우 출력할 에러 메시지와 지도 정보 출력
+func printErrorMessageAndMapData(playerInput: String.Element, mapData: [[String.Element]]) {
+    printMapData(stageArray: convertStringArray(stringArrayToConvert: convert2DArrayTo1DArray(mapData), convertBy: dictionaryForReplace))
+    print("\(playerInput): (경고!) 해당 명령을 수행할 수 없습니다.")
+}
+
+
+// 사용자의 입력값을 사용하여 맵 데이터를 변경하고 출력하는 함수
+func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: inout(Int, Int), mapData: inout[[String.Element]]) {
+    switch playerInput {
+    case "w":
+        // 플레이어가 이동하려는 곳이 아무것도 없는지 확인하여 처리하는 조건식
+        if mapData[playerLocation.1-2][playerLocation.0-1] != " " {
+            printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+        }else {
+            // 2차원 배열의 맵 정보에서 플레이어의 현재 위치값을 공란으로 변경
+            enterValueOnMap(playerLocation: playerLocation, valueToEnter: " ", mapData: &mapData)
+            
+            // 함수 내부의 플레이어 좌표값을 변경
+            playerLocation.1 -= 1
+            
+            // 변경된 플레이어 좌표값을 바탕으로 2차원 배열에 P(플레이어) 넣기
+            enterValueOnMap(playerLocation: playerLocation, valueToEnter: "3", mapData: &mapData)
+            
+            // 변경된 2차원 배열 출력
+            printMapData(stageArray: convertStringArray(stringArrayToConvert: convert2DArrayTo1DArray(mapData), convertBy: dictionaryForReplace))
+            print("\(playerInput): 위로 이동합니다.")
+        }
+    case "a":
+        if mapData[playerLocation.1-1][playerLocation.0-2] != " " {
+            printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+        }else {
+            enterValueOnMap(playerLocation: playerLocation, valueToEnter: " ", mapData: &mapData)
+            
+            playerLocation.0 -= 1
+            
+            enterValueOnMap(playerLocation: playerLocation, valueToEnter: "3", mapData: &mapData)
+
+            printMapData(stageArray: convertStringArray(stringArrayToConvert: convert2DArrayTo1DArray(mapData), convertBy: dictionaryForReplace))
+            print("\(playerInput): 왼쪽으로 이동합니다.")
+        }
+    case "s":
+        if mapData[playerLocation.1][playerLocation.0-1] != " " {
+            printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+        }else {
+            enterValueOnMap(playerLocation: playerLocation, valueToEnter: " ", mapData: &mapData)
+            
+            playerLocation.1 += 1
+            
+            enterValueOnMap(playerLocation: playerLocation, valueToEnter: "3", mapData: &mapData)
+            
+            printMapData(stageArray: convertStringArray(stringArrayToConvert: convert2DArrayTo1DArray(mapData), convertBy: dictionaryForReplace))
+            print("\(playerInput): 아래로 이동합니다.")
+        }
+    case "d":
+        if mapData[playerLocation.1-1][playerLocation.0] != " " {
+            printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+        }else {
+            enterValueOnMap(playerLocation: playerLocation, valueToEnter: " ", mapData: &mapData)
+            
+            playerLocation.0 += 1
+            
+            enterValueOnMap(playerLocation: playerLocation, valueToEnter: "3", mapData: &mapData)
+
+            printMapData(stageArray: convertStringArray(stringArrayToConvert: convert2DArrayTo1DArray(mapData), convertBy: dictionaryForReplace))
+            print("\(playerInput): 오른쪽으로 이동합니다.")
+        }
+    default:
+        printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+    }
+}
+
 // 플레이어 이동 구현
-func gameStart() {
+func stage2GameStart() {
+    print("Stage 2")
+    
     // 맵 정보 출력
     printMapData(stageArray: stage2Array)
+    
+    var gameMapData: [[String.Element]] = stage2TwoDimentionalArray
 
     var playerInput: String = ""
     var playerLocation: (Int, Int) = findPlayerLocation(mapData: stage2TwoDimentionalArray)
 
     // 사용자가 q를 입력할 때까지 반복 수행
     while true {
-        print("SOKOBAN> ", terminator: "")
+        print("\nSOKOBAN> ", terminator: "")
         playerInput = readLine() ?? ""
         if playerInput == "q" {
             print("Bye~")
             break
         }else {
             playerInput.map({
-                switch $0 {
-                case "w":
-                    print("위")
-                    /// 1. 2차원 배열에서 플레이어가 있는 위치의 값을 ""(공란)으로 바꾸기
-                    /// 2. 함수 내부의 플레이어 좌표값을 바꾸기
-                    /// 3. 2에서 바꾼 좌표값을 바탕으로 2차원 배열에 P(플레이어) 넣기
-                    /// 4. 변경된 2차원 배열 출력하기
-                    /// 5. W: 위로 이동합니다. 출력
-                case "a":
-                    print("왼쪽")
-                case "s":
-                    print("아래")
-                case "d":
-                    print("오른쪽")
-                default:
-                    print("(경고!) 해당 명령을 수행할 수 없습니다.")
-                }
+                changeMapDataBasedPlayerInput(playerInput: $0, playerLocation: &playerLocation, mapData: &gameMapData)
             })
         }
     }
 }
+
+stage2GameStart()
+
