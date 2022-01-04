@@ -1,22 +1,29 @@
 import Foundation
 
+
+// 바탕화면에 저장된 프로젝트 폴더의 txt파일을 문자열로 받아오는 함수
+// 프로젝트 폴더가 어디에 있든 받아올 수 있도록 하는 방법을 찾아봤는데.. 잘 모르겠다..
+func readFile() -> String {
+    let fileManager: FileManager = FileManager.default
+    
+    var textForReturn: String = ""
+    
+    if let documentPath: URL = fileManager.urls(for: .desktopDirectory, in: .userDomainMask).first {
+        let textPath: URL = documentPath.appendingPathComponent("SokobanTest/map.txt")
+
+        do {
+            let dataFromPath: Data = try Data(contentsOf: textPath)
+            textForReturn = String(data: dataFromPath, encoding: .utf8) ?? "문서없음"
+        } catch {
+            print(error)
+        }
+    }
+    
+    return textForReturn
+}
+
 // 주어진 문자열 (맵 데이터)
-let mapData: String =
-"""
-Stage 1
-#####
-#OoP#
-#####
-=====
-Stage 2
-  #######
-###  O  ###
-#    o    #
-# Oo P oO #
-###  o  ###
- #   O  #
- ########
-"""
+let mapData: String = readFile()
 
 // 문자열 변환을 위한 Dictionary
 let dictionaryForReplace: [String: String] = ["#": "0", "O": "1", "o": "2", "P": "3", "=": "4",]
@@ -294,5 +301,6 @@ func stage2GameStart() {
     }
 }
 
-stage2GameStart()
+//stage2GameStart()
 
+//print(readFile())
