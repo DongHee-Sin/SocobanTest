@@ -56,21 +56,46 @@ func separateStringBasedNewLine(_ inputString: String) -> [String] {
 
 
 /// 두 개의 stage 정보를 가진 문자열 배열을 조건문을 사용하여 각각의 stage 맵 정보로 저장
-func addMapData(stage1: inout [String], stage2: inout [String], baseString: [String]) {
-    var isOverStage1: Bool = false
-    for index in 0..<baseString.count {
-        if baseString[index] == "Stage 1" {
-            continue
-        }else if baseString[index] == "Stage 2" {
-            isOverStage1 = true
-        }else if baseString[index] == "=====" || baseString[index] == "44444" {
-            continue
-        }else if isOverStage1 == false {
-            stage1.append(baseString[index])
+//func addMapData(stage1: inout [String], stage2: inout [String], baseString: [String]) {
+//    var isOverStage1: Bool = false
+//    for index in 0..<baseString.count {
+//        if baseString[index] == "Stage 1" {
+//            continue
+//        }else if baseString[index] == "Stage 2" {
+//            isOverStage1 = true
+//        }else if baseString[index] == "=====" || baseString[index] == "44444" {
+//            continue
+//        }else if isOverStage1 == false {
+//            stage1.append(baseString[index])
+//        }else {
+//            stage2.append(baseString[index])
+//        }
+//    }
+//}
+
+
+
+/// 줄 단위로 분리된 문자열 배열을 매개변수로 받아서
+/// 각 Stage별로 구분되어 저장된 2차원 배열로 반환
+func convertMapDataToEachStage(baseString: [String]) -> [[String]] {
+    var eachStageArray: [[String]] = [
+        [String](),
+        [String](),
+        [String](),
+        [String](),
+        [String]()
+    ]
+    var stageCount: Int = -1
+    
+    for eachLine in baseString {
+        if eachLine.contains("Stage") {
+            stageCount += 1
         }else {
-            stage2.append(baseString[index])
+            eachStageArray[stageCount].append(eachLine)
         }
     }
+    
+    return eachStageArray
 }
 
 
@@ -87,15 +112,24 @@ func convertStringArrayTo2DArray(_ inputStringArray: [String]) -> [[String.Eleme
 
 
 // 맵 정보를 저장하는 배열, 2차원배열 변수 선언
-var stage1Array: [String] = [String]()
-var stage2Array: [String] = [String]()
-addMapData(stage1: &stage1Array, stage2: &stage2Array, baseString: separateStringBasedNewLine(mapData))
+//var stage1Array: [String] = [String]()
+//var stage2Array: [String] = [String]()
+//addMapData(stage1: &stage1Array, stage2: &stage2Array, baseString: separateStringBasedNewLine(mapData))
+//
+//var convertedStage1Array: [String] = [String]()
+//var convertedStage2Array: [String] = [String]()
+//addMapData(stage1: &convertedStage1Array, stage2: &convertedStage2Array, baseString: separateStringBasedNewLine(convertString(stringToConvert: mapData, convertBy: dictionaryForReplace)))
+//var stage1TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(convertedStage1Array)
+//var stage2TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(convertedStage2Array)
 
-var convertedStage1Array: [String] = [String]()
-var convertedStage2Array: [String] = [String]()
-addMapData(stage1: &convertedStage1Array, stage2: &convertedStage2Array, baseString: separateStringBasedNewLine(convertString(stringToConvert: mapData, convertBy: dictionaryForReplace)))
-var stage1TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(convertedStage1Array)
-var stage2TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(convertedStage2Array)
+
+
+
+// 변환 전 문자열이 사용된 맵 데이터 배열
+let beforeConvertMapDataArray: [[String]] = convertMapDataToEachStage(baseString: separateStringBasedNewLine(mapData))
+// 변환 후 문자열이 사용된 맵 데이터 배열
+let afterConvertMapDataArray: [[String]] = convertMapDataToEachStage(baseString: separateStringBasedNewLine(convertString(stringToConvert: mapData, convertBy: dictionaryForReplace)))
+
 
 
 
@@ -161,15 +195,15 @@ func printStageInfo(_ mapData: [[String.Element]]) {
 
 
 // 1단계에서 요구하는 콘솔 출력하는 함수
-func printStep1() {
-    print("Stage 1\n")
-    printMapData(stageArray: stage1Array)
-    printStageInfo(stage1TwoDimentionalArray)
-
-    print("Stage 2\n")
-    printMapData(stageArray: stage2Array)
-    printStageInfo(stage2TwoDimentionalArray)
-}
+//func printStep1() {
+//    print("Stage 1\n")
+//    printMapData(stageArray: stage1Array)
+//    printStageInfo(stage1TwoDimentionalArray)
+//
+//    print("Stage 2\n")
+//    printMapData(stageArray: stage2Array)
+//    printStageInfo(stage2TwoDimentionalArray)
+//}
 
 
 
@@ -279,12 +313,12 @@ func stage2GameStart() {
     print("Stage 2")
     
     // 맵 정보 출력
-    printMapData(stageArray: stage2Array)
+    printMapData(stageArray: beforeConvertMapDataArray[1])
     
-    var gameMapData: [[String.Element]] = stage2TwoDimentionalArray
+    var gameMapData: [[String.Element]] = convertStringArrayTo2DArray(afterConvertMapDataArray[1])
 
     var playerInput: String = ""
-    var playerLocation: (Int, Int) = findPlayerLocation(mapData: stage2TwoDimentionalArray)
+    var playerLocation: (Int, Int) = findPlayerLocation(mapData: convertStringArrayTo2DArray(afterConvertMapDataArray[1]))
 
     // 사용자가 q를 입력할 때까지 반복 수행
     while true {
@@ -301,6 +335,6 @@ func stage2GameStart() {
     }
 }
 
-//stage2GameStart()
+stage2GameStart()
 
 //print(readFile())
