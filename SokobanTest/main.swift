@@ -22,9 +22,6 @@ func readFile() -> String {
     return textForReturn
 }
 
-// 주어진 문자열 (맵 데이터)
-let mapData: String = readFile()
-
 // 문자열 변환을 위한 Dictionary
 let dictionaryForReplace: [String: String] = ["#": "0", "O": "1", "o": "2", "P": "3", "=": "4",]
 
@@ -121,16 +118,6 @@ func convertStringArrayTo2DArray(_ inputStringArray: [String]) -> [[String.Eleme
 //addMapData(stage1: &convertedStage1Array, stage2: &convertedStage2Array, baseString: separateStringBasedNewLine(convertString(stringToConvert: mapData, convertBy: dictionaryForReplace)))
 //var stage1TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(convertedStage1Array)
 //var stage2TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(convertedStage2Array)
-
-
-
-
-// 변환 전 문자열이 사용된 맵 데이터 배열
-let beforeConvertMapDataArray: [[String]] = convertMapDataToEachStage(baseString: separateStringBasedNewLine(mapData))
-// 변환 후 문자열이 사용된 맵 데이터 배열
-let afterConvertMapDataArray: [[String]] = convertMapDataToEachStage(baseString: separateStringBasedNewLine(convertString(stringToConvert: mapData, convertBy: dictionaryForReplace)))
-
-
 
 
 /// 문자열 배열을 입력받아서 콘솔에 맵 정보를 출력하는 함수
@@ -308,33 +295,50 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
     }
 }
 
-// 플레이어 이동 구현
-func stage2GameStart() {
-    print("Stage 2")
-    
-    // 맵 정보 출력
-    printMapData(stageArray: beforeConvertMapDataArray[1])
-    
-    var gameMapData: [[String.Element]] = convertStringArrayTo2DArray(afterConvertMapDataArray[1])
 
-    var playerInput: String = ""
-    var playerLocation: (Int, Int) = findPlayerLocation(mapData: convertStringArrayTo2DArray(afterConvertMapDataArray[1]))
-
-    // 사용자가 q를 입력할 때까지 반복 수행
-    while true {
-        print("\nSOKOBAN> ", terminator: "")
-        playerInput = readLine() ?? ""
-        if playerInput == "q" {
-            print("Bye~")
-            break
-        }else {
-            playerInput.map({
-                changeMapDataBasedPlayerInput(playerInput: $0, playerLocation: &playerLocation, mapData: &gameMapData)
-            })
+func gameStart() {
+    // 주어진 문자열 (맵 데이터)
+    let mapData: String = readFile()
+    // 변환 전 문자열이 사용된 맵 데이터 배열
+    let beforeConvertMapDataArray: [[String]] = convertMapDataToEachStage(baseString: separateStringBasedNewLine(mapData))
+    // 변환 후 문자열이 사용된 맵 데이터 배열
+    let afterConvertMapDataArray: [[String]] = convertMapDataToEachStage(baseString: separateStringBasedNewLine(convertString(stringToConvert: mapData, convertBy: dictionaryForReplace)))
+    
+    // stage1 맵 정보 출력
+    printMapData(stageArray: beforeConvertMapDataArray[0])
+    
+    // 5개의 Stage(2차원 배열) 정보를 담은 3차원 배열
+    let stageMapDataArray: [[[String.Element]]] = afterConvertMapDataArray.map({convertStringArrayTo2DArray($0)})
+    
+    
+    // stage를 하나씩 받아서 처리하는 for문
+    // eachStage = [[String.Element]]
+    gameLoop: for eachStage in stageMapDataArray {
+        var playerInput: String = ""
+        var eachStage: [[String.Element]] = eachStage
+        var playerLocation: (Int, Int) = findPlayerLocation(mapData: eachStage)
+        
+        while true {
+            print("\nSOKOBAN> ", terminator: "")
+            playerInput = readLine() ?? ""
+            
+            if playerInput == "q" {
+                print("bye~")
+                break gameLoop
+            }else {
+                for inputKey in playerInput {
+                    changeMapDataBasedPlayerInput(playerInput: inputKey, playerLocation: &playerLocation, mapData: &eachStage)
+                }
+            }
         }
     }
 }
 
-stage2GameStart()
+gameStart()
 
-//print(readFile())
+
+
+
+/// 스테이지 1의 지도와 프롬프트를 출력하면서 시작하는 함수 작성
+/// o를 O에 이동시키는 함수 작성
+/// r 을 입력하면 현재 진행중인 스테이지를 초기화시키는 함수 작성
