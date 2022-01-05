@@ -1,8 +1,8 @@
 import Foundation
 
 
-// 바탕화면에 저장된 프로젝트 폴더의 txt파일을 문자열로 받아오는 함수
-// 프로젝트 폴더가 어디에 있든 받아올 수 있도록 하는 방법을 찾아봤는데.. 잘 모르겠다..
+/// 바탕화면에 저장된 프로젝트 폴더의 txt파일을 문자열로 받아오는 함수
+/// 프로젝트 폴더가 어디에 있든 받아올 수 있도록 하는 방법을 찾아봤는데.. 잘 모르겠다..
 func readFile() -> String {
     let fileManager: FileManager = FileManager.default
     
@@ -22,8 +22,8 @@ func readFile() -> String {
     return textForReturn
 }
 
-// 문자열 변환을 위한 Dictionary
-let dictionaryForReplace: [String: String] = ["#": "0", "O": "1", "o": "2", "P": "3", "=": "4",]
+/// 문자열 변환을 위한 Dictionary
+let dictionaryForReplace: [String: String] = ["#": "0", "O": "1", "o": "2", "P": "3", "=": "4", "0": "5"]
 
 
 /// 입력된 문자열을 dictionary를 바탕으로 변환하여 리턴
@@ -46,30 +46,10 @@ func convertStringArray(stringArrayToConvert: [String], convertBy: [String: Stri
 }
 
 
-// 입력된 문자열을 새로운 줄(\n)을 기준으로 분리하여 배열로 반환
+/// 입력된 문자열을 새로운 줄(\n)을 기준으로 분리하여 배열로 반환
 func separateStringBasedNewLine(_ inputString: String) -> [String] {
     return inputString.components(separatedBy: "\n")
 }
-
-
-/// 두 개의 stage 정보를 가진 문자열 배열을 조건문을 사용하여 각각의 stage 맵 정보로 저장
-//func addMapData(stage1: inout [String], stage2: inout [String], baseString: [String]) {
-//    var isOverStage1: Bool = false
-//    for index in 0..<baseString.count {
-//        if baseString[index] == "Stage 1" {
-//            continue
-//        }else if baseString[index] == "Stage 2" {
-//            isOverStage1 = true
-//        }else if baseString[index] == "=====" || baseString[index] == "44444" {
-//            continue
-//        }else if isOverStage1 == false {
-//            stage1.append(baseString[index])
-//        }else {
-//            stage2.append(baseString[index])
-//        }
-//    }
-//}
-
 
 
 /// 줄 단위로 분리된 문자열 배열을 매개변수로 받아서
@@ -108,17 +88,6 @@ func convertStringArrayTo2DArray(_ inputStringArray: [String]) -> [[String.Eleme
 }
 
 
-// 맵 정보를 저장하는 배열, 2차원배열 변수 선언
-//var stage1Array: [String] = [String]()
-//var stage2Array: [String] = [String]()
-//addMapData(stage1: &stage1Array, stage2: &stage2Array, baseString: separateStringBasedNewLine(mapData))
-//
-//var convertedStage1Array: [String] = [String]()
-//var convertedStage2Array: [String] = [String]()
-//addMapData(stage1: &convertedStage1Array, stage2: &convertedStage2Array, baseString: separateStringBasedNewLine(convertString(stringToConvert: mapData, convertBy: dictionaryForReplace)))
-//var stage1TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(convertedStage1Array)
-//var stage2TwoDimentionalArray: [[String.Element]] = convertStringArrayTo2DArray(convertedStage2Array)
-
 
 /// 문자열 배열을 입력받아서 콘솔에 맵 정보를 출력하는 함수
 /// forEach를 사용하면 컨테이너의 요소들을 순차적으로 순환하면서 동작시키고 싶은 작업을 "클로저로" 넘겨줄 수 있음
@@ -129,7 +98,7 @@ func printMapData(stageArray: [String]) {
 }
 
 
-// 옵셔널 바인딩
+/// 옵셔널 바인딩
 func intOptionalBinding(optionalValue: Int?)  -> Int{
     guard let noneOptionalValue = optionalValue else {
         fatalError()
@@ -168,7 +137,7 @@ func findPlayerLocation(mapData: [[String.Element]]) -> (Int, Int) {
 }
 
 
-// 파라미터로 받은 스테이지의 정보를 출력
+/// 파라미터로 받은 스테이지의 정보를 출력
 func printStageInfo(_ mapData: [[String.Element]]) {
     print("")
     print("가로크기: \(calculateWidth(mapData: mapData))")
@@ -180,120 +149,194 @@ func printStageInfo(_ mapData: [[String.Element]]) {
 }
 
 
-
-// 1단계에서 요구하는 콘솔 출력하는 함수
-//func printStep1() {
-//    print("Stage 1\n")
-//    printMapData(stageArray: stage1Array)
-//    printStageInfo(stage1TwoDimentionalArray)
-//
-//    print("Stage 2\n")
-//    printMapData(stageArray: stage2Array)
-//    printStageInfo(stage2TwoDimentionalArray)
-//}
-
-
-
-//func movePlayer(_ input: String.Element) {
-//    switch input {
-//    case "w":
-//        print("위")
-//    case "a":
-//        print("왼쪽")
-//    case "s":
-//        print("아래")
-//    case "d":
-//        print("오른쪽")
-//    default:
-//        print("(경고!) 해당 명령을 수행할 수 없습니다.")
-//    }
-//}
-
-
-
-// 2차원 배열을 출력을 위한 1차원 배열로 바꾸는 함수
+/// 2차원 배열을 출력을 위한 1차원 배열로 바꾸는 함수
 func convert2DArrayTo1DArray(_ twoDimentionArray: [[String.Element]]) -> [String] {
     return twoDimentionArray.map({String($0)})
 }
 
 
-// 플레이어 위치를 사용하여 지도에 원하는 값 입력
+/// 플레이어 위치를 사용하여 지도에 원하는 값 입력
 func enterValueOnMap(playerLocation: (Int, Int), valueToEnter: String.Element, mapData: inout[[String.Element]]) {
     mapData[playerLocation.1-1][playerLocation.0-1] = valueToEnter
 }
     
 
-// 플레이어가 원하는 위치로 이동할 수 없는 경우 출력할 에러 메시지와 지도 정보 출력
+/// 플레이어가 원하는 위치로 이동할 수 없는 경우 출력할 에러 메시지와 지도 정보 출력
 func printErrorMessageAndMapData(playerInput: String.Element, mapData: [[String.Element]]) {
     printMapData(stageArray: convertStringArray(stringArrayToConvert: convert2DArrayTo1DArray(mapData), convertBy: dictionaryForReplace))
     print("\(playerInput): (경고!) 해당 명령을 수행할 수 없습니다.")
 }
 
 
-// 사용자의 입력값을 사용하여 맵 데이터를 변경하고 출력하는 함수
+
+func playerMove(playerInput: String.Element, playerLocation: inout(Int, Int), mapData: inout[[String.Element]]) {
+    
+    switch playerInput {
+    case "w", "a":
+        enterValueOnMap(playerLocation: playerLocation, valueToEnter: " ", mapData: &mapData)
+        if playerInput == "w" {
+            playerLocation.1 -= 1
+        }else {
+            playerLocation.0 -= 1
+        }
+    case "s", "d":
+        enterValueOnMap(playerLocation: playerLocation, valueToEnter: " ", mapData: &mapData)
+        if playerInput == "s" {
+            playerLocation.1 += 1
+        }else {
+            playerLocation.0 += 1
+        }
+    default:
+        return
+    }
+    
+    enterValueOnMap(playerLocation: playerLocation, valueToEnter: "3", mapData: &mapData)
+    printMapData(stageArray: convertStringArray(stringArrayToConvert: convert2DArrayTo1DArray(mapData), convertBy: dictionaryForReplace))
+    
+    switch playerInput {
+    case "w":
+        print("w: 위로 이동합니다.")
+    case "a":
+        print("a: 왼쪽으로 이동합니다.")
+    case "s":
+        print("s: 아래로 이동합니다.")
+    case "d":
+        print("d: 오른쪽으로 이동합니다.")
+    default:
+        return
+    }
+}
+
+
+/// 입력받은 키워드를 사용하여 플레ㅔ이어 위치를 이동
 func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: inout(Int, Int), mapData: inout[[String.Element]]) {
     switch playerInput {
     case "w":
-        // 플레이어가 이동하려는 곳이 아무것도 없는지 확인하여 처리하는 조건식
-        if mapData[playerLocation.1-2][playerLocation.0-1] != " " {
+        // 이동하려는 공간이 0(벽) 또는 1(구멍)일 경우 실행불가 메시지 출력
+        if mapData[playerLocation.1-2][playerLocation.0-1] == "0" || mapData[playerLocation.1-2][playerLocation.0-1] == "1" {
             printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+        // 이동하려는 공간이 " "(공란) 또는 2(공)일 경우 else - switch문 실행
         }else {
-            // 2차원 배열의 맵 정보에서 플레이어의 현재 위치값을 공란으로 변경
-            enterValueOnMap(playerLocation: playerLocation, valueToEnter: " ", mapData: &mapData)
-            
-            // 함수 내부의 플레이어 좌표값을 변경
-            playerLocation.1 -= 1
-            
-            // 변경된 플레이어 좌표값을 바탕으로 2차원 배열에 P(플레이어) 넣기
-            enterValueOnMap(playerLocation: playerLocation, valueToEnter: "3", mapData: &mapData)
-            
-            // 변경된 2차원 배열 출력
-            printMapData(stageArray: convertStringArray(stringArrayToConvert: convert2DArrayTo1DArray(mapData), convertBy: dictionaryForReplace))
-            print("\(playerInput): 위로 이동합니다.")
+            switch mapData[playerLocation.1-2][playerLocation.0-1] {
+            // 이동하려는 공간이 공란인 경우
+            case " ":
+                playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+            // 이동하려는 공간에 2(공)이 있는 경우
+            case "2":
+                switch mapData[playerLocation.1-3][playerLocation.0-1] {
+                // 공이 이동될 공간이 공란인 경우
+                case " ":
+                    enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1-1), valueToEnter: "2", mapData: &mapData)
+                    playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                // 공이 이동될 공간에 1(구멍)이 있는 경우
+                case "1":
+                    enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1-1), valueToEnter: "5", mapData: &mapData)
+                    playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                // 공을 옮기려는 공간에 다른공 or 벽이 있을 때
+                default:
+                    printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+                }
+            default:
+                printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+            }
         }
     case "a":
-        if mapData[playerLocation.1-1][playerLocation.0-2] != " " {
+        // 이동하려는 공간이 0(벽) 또는 1(구멍)일 경우 실행불가 메시지 출력
+        if mapData[playerLocation.1-1][playerLocation.0-2] == "0" || mapData[playerLocation.1-1][playerLocation.0-2] == "1" {
             printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+        // 이동하려는 공간이 " "(공란) 또는 2(공)일 경우 else - switch문 실행
         }else {
-            enterValueOnMap(playerLocation: playerLocation, valueToEnter: " ", mapData: &mapData)
-            
-            playerLocation.0 -= 1
-            
-            enterValueOnMap(playerLocation: playerLocation, valueToEnter: "3", mapData: &mapData)
-
-            printMapData(stageArray: convertStringArray(stringArrayToConvert: convert2DArrayTo1DArray(mapData), convertBy: dictionaryForReplace))
-            print("\(playerInput): 왼쪽으로 이동합니다.")
+            switch mapData[playerLocation.1-1][playerLocation.0-2] {
+            // 이동하려는 공간이 공란인 경우
+            case " ":
+                playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+            // 이동하려는 공간에 2(공)이 있는 경우
+            case "2":
+                switch mapData[playerLocation.1-1][playerLocation.0-3] {
+                // 공이 이동될 공간이 공란인 경우
+                case " ":
+                    enterValueOnMap(playerLocation: (playerLocation.0-1, playerLocation.1), valueToEnter: "2", mapData: &mapData)
+                    playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                // 공이 이동될 공간에 1(구멍)이 있는 경우
+                case "1":
+                    enterValueOnMap(playerLocation: (playerLocation.0-1, playerLocation.1), valueToEnter: "5", mapData: &mapData)
+                    playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                // 공을 옮기려는 공간에 다른공 or 벽이 있을 때
+                default:
+                    printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+                }
+            default:
+                printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+            }
         }
     case "s":
-        if mapData[playerLocation.1][playerLocation.0-1] != " " {
+        // 이동하려는 공간이 0(벽) 또는 1(구멍)일 경우 실행불가 메시지 출력
+        if mapData[playerLocation.1][playerLocation.0-1] == "0" || mapData[playerLocation.1][playerLocation.0-1] == "1" {
             printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+        // 이동하려는 공간이 " "(공란) 또는 2(공)일 경우 else - switch문 실행
         }else {
-            enterValueOnMap(playerLocation: playerLocation, valueToEnter: " ", mapData: &mapData)
-            
-            playerLocation.1 += 1
-            
-            enterValueOnMap(playerLocation: playerLocation, valueToEnter: "3", mapData: &mapData)
-            
-            printMapData(stageArray: convertStringArray(stringArrayToConvert: convert2DArrayTo1DArray(mapData), convertBy: dictionaryForReplace))
-            print("\(playerInput): 아래로 이동합니다.")
+            switch mapData[playerLocation.1][playerLocation.0-1] {
+            // 이동하려는 공간이 공란인 경우
+            case " ":
+                playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+            // 이동하려는 공간에 2(공)이 있는 경우
+            case "2":
+                switch mapData[playerLocation.1+1][playerLocation.0-1] {
+                // 공이 이동될 공간이 공란인 경우
+                case " ":
+                    enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1+3), valueToEnter: "2", mapData: &mapData)
+                    playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                // 공이 이동될 공간에 1(구멍)이 있는 경우
+                case "1":
+                    enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1+3), valueToEnter: "5", mapData: &mapData)
+                    playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                // 공을 옮기려는 공간에 다른공 or 벽이 있을 때
+                default:
+                    printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+                }
+            default:
+                printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+            }
         }
     case "d":
-        if mapData[playerLocation.1-1][playerLocation.0] != " " {
+        // 이동하려는 공간이 0(벽) 또는 1(구멍)일 경우 실행불가 메시지 출력
+        if mapData[playerLocation.1-1][playerLocation.0] == "0" || mapData[playerLocation.1-1][playerLocation.0] == "1" {
             printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+        // 이동하려는 공간이 " "(공란) 또는 2(공)일 경우 else - switch문 실행
         }else {
-            enterValueOnMap(playerLocation: playerLocation, valueToEnter: " ", mapData: &mapData)
-            
-            playerLocation.0 += 1
-            
-            enterValueOnMap(playerLocation: playerLocation, valueToEnter: "3", mapData: &mapData)
-
-            printMapData(stageArray: convertStringArray(stringArrayToConvert: convert2DArrayTo1DArray(mapData), convertBy: dictionaryForReplace))
-            print("\(playerInput): 오른쪽으로 이동합니다.")
+            switch mapData[playerLocation.1-1][playerLocation.0] {
+            // 이동하려는 공간이 공란인 경우
+            case " ":
+                playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+            // 이동하려는 공간에 2(공)이 있는 경우
+            case "2":
+                switch mapData[playerLocation.1-1][playerLocation.0+1] {
+                // 공이 이동될 공간이 공란인 경우
+                case " ":
+                    enterValueOnMap(playerLocation: (playerLocation.0+3, playerLocation.1), valueToEnter: "2", mapData: &mapData)
+                    playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                // 공이 이동될 공간에 1(구멍)이 있는 경우
+                case "1":
+                    enterValueOnMap(playerLocation: (playerLocation.0+3, playerLocation.1), valueToEnter: "5", mapData: &mapData)
+                    playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                // 공을 옮기려는 공간에 다른공 or 벽이 있을 때
+                default:
+                    printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+                }
+            default:
+                printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+            }
         }
     default:
         printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
     }
 }
+
+
+
+
+
+
 
 
 func gameStart() {
@@ -339,6 +382,7 @@ gameStart()
 
 
 
-/// 스테이지 1의 지도와 프롬프트를 출력하면서 시작하는 함수 작성
-/// o를 O에 이동시키는 함수 작성
+/// 스테이지 1의 지도와 프롬프트를 출력하면서 시작하는 함수 작성 : o
+/// o를 O에 이동시키는 함수 작성 : o
+/// 현재 stage에서 모든 O이 사라지면 해당 stage를 종료시키고 다음 Stage로 이동
 /// r 을 입력하면 현재 진행중인 스테이지를 초기화시키는 함수 작성
