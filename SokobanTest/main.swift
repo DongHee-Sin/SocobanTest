@@ -224,6 +224,8 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
             // 이동하려는 공간이 공란인 경우
             case " ":
                 playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                printMapData(stage2DArray: mapData)
+                print("\(playerInput): 위로 이동합니다.")
             // 이동하려는 공간에 2(공)이 있는 경우
             case "2":
                 switch mapData[playerLocation.1-3][playerLocation.0-1] {
@@ -231,10 +233,14 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
                 case " ":
                     enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1-2), valueToEnter: "2", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                    printMapData(stage2DArray: mapData)
+                    print("\(playerInput): 위로 이동합니다.")
                 // 공이 이동될 공간에 1(구멍)이 있는 경우
                 case "1":
                     enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1-2), valueToEnter: "c", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                    printMapData(stage2DArray: mapData)
+                    print("\(playerInput): 위로 이동합니다.")
                 // 공을 옮기려는 공간에 다른공 or 벽이 있을 때
                 default:
                     printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
@@ -253,6 +259,8 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
             // 이동하려는 공간이 공란인 경우
             case " ":
                 playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                printMapData(stage2DArray: mapData)
+                print("\(playerInput): 왼쪽으로 이동합니다.")
             // 이동하려는 공간에 2(공)이 있는 경우
             case "2":
                 switch mapData[playerLocation.1-1][playerLocation.0-3] {
@@ -260,10 +268,14 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
                 case " ":
                     enterValueOnMap(playerLocation: (playerLocation.0-2, playerLocation.1), valueToEnter: "2", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                    printMapData(stage2DArray: mapData)
+                    print("\(playerInput): 위로 이동합니다.")
                 // 공이 이동될 공간에 1(구멍)이 있는 경우
                 case "1":
                     enterValueOnMap(playerLocation: (playerLocation.0-2, playerLocation.1), valueToEnter: "c", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                    printMapData(stage2DArray: mapData)
+                    print("\(playerInput): 위로 이동합니다.")
                 // 공을 옮기려는 공간에 다른공 or 벽이 있을 때
                 default:
                     printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
@@ -282,6 +294,8 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
             // 이동하려는 공간이 공란인 경우
             case " ":
                 playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                printMapData(stage2DArray: mapData)
+                print("\(playerInput): 아래로 이동합니다.")
             // 이동하려는 공간에 2(공)이 있는 경우
             case "2":
                 switch mapData[playerLocation.1+1][playerLocation.0-1] {
@@ -289,10 +303,14 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
                 case " ":
                     enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1+2), valueToEnter: "2", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                    printMapData(stage2DArray: mapData)
+                    print("\(playerInput): 아래로 이동합니다.")
                 // 공이 이동될 공간에 1(구멍)이 있는 경우
                 case "1":
                     enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1+2), valueToEnter: "c", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                    printMapData(stage2DArray: mapData)
+                    print("\(playerInput): 아래로 이동합니다.")
                 // 공을 옮기려는 공간에 다른공 or 벽이 있을 때
                 default:
                     printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
@@ -311,6 +329,8 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
             // 이동하려는 공간이 공란인 경우
             case " ":
                 playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                printMapData(stage2DArray: mapData)
+                print("\(playerInput): 오른쪽으로 이동합니다.")
             // 이동하려는 공간에 2(공)이 있는 경우
             case "2":
                 switch mapData[playerLocation.1-1][playerLocation.0+1] {
@@ -318,10 +338,14 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
                 case " ":
                     enterValueOnMap(playerLocation: (playerLocation.0+2, playerLocation.1), valueToEnter: "2", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                    printMapData(stage2DArray: mapData)
+                    print("\(playerInput): 오른쪽으로 이동합니다.")
                 // 공이 이동될 공간에 1(구멍)이 있는 경우
                 case "1":
                     enterValueOnMap(playerLocation: (playerLocation.0+2, playerLocation.1), valueToEnter: "c", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
+                    printMapData(stage2DArray: mapData)
+                    print("\(playerInput): 오른쪽으로 이동합니다.")
                 // 공을 옮기려는 공간에 다른공 or 벽이 있을 때
                 default:
                     printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
@@ -334,19 +358,6 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
         printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
     }
     
-    printMapData(stage2DArray: mapData)
-    switch playerInput {
-    case "w":
-        print("w: 위로 이동합니다.")
-    case "a":
-        print("a: 왼쪽으로 이동합니다.")
-    case "s":
-        print("s: 아래로 이동합니다.")
-    case "d":
-        print("d: 오른쪽으로 이동합니다.")
-    default:
-        return
-    }
 }
 
 
@@ -415,5 +426,5 @@ gameStart()
 
 /// 스테이지 1의 지도와 프롬프트를 출력하면서 시작하는 함수 작성 : o
 /// o를 O에 이동시키는 함수 작성 : o
-/// 현재 stage에서 모든 O이 사라지면 해당 stage를 종료시키고 다음 Stage로 이동
+/// 현재 stage에서 모든 O이 사라지면 해당 stage를 종료시키고 다음 Stage로 이동 : o
 /// r 을 입력하면 현재 진행중인 스테이지를 초기화시키는 함수 작성
