@@ -31,18 +31,27 @@ let dictionaryForReplace: [String: String] = ["#": "0", "O": "1", "o": "2", "P":
 /// $0 = stringToConvert (String)
 /// $1 = convertBy (Dictionary)
 /// 초기값을 stringToConvert로 사용하고, 클로저로 어떤 변화를 줄지 작성함
-func convertString(stringToConvert: String, convertBy: [String: String]) -> String {
+func convertStringToNumber(stringToConvert: String, convertBy: [String: String]) -> String {
     return convertBy.reduce(stringToConvert) {
         $0.replacingOccurrences(of: $1.key, with: $1.value)
     }
 }
+
+func convertNumberToString(stringToConvert: String, convertBy: [String: String]) -> String {
+    return convertBy.reduce(stringToConvert) {
+        $0.replacingOccurrences(of: $1.value, with: $1.key)
+    }
+}
+
+
+
 
 /// 변환된 문자열로 구성된 1차원 배열을
 /// 변환되지 않은 문자열로 구성된 1차원 배열로 만들기 위한 함수
 /// (콘솔 출력을 위해)
 /// 매개변수로 convert2DArrayTo1DArray함수의 결과를 사용
 func convertStringArray(stringArrayToConvert: [String], convertBy: [String: String]) -> [String] {
-    return stringArrayToConvert.map({convertBy.reduce($0, {$0.replacingOccurrences(of: $1.value, with: $1.key)})})
+    return stringArrayToConvert.map({convertNumberToString(stringToConvert: $0, convertBy: convertBy)})
 }
 
 
@@ -91,9 +100,9 @@ func convertStringArrayTo2DArray(_ inputStringArray: [String]) -> [[String.Eleme
 
 /// 문자열 배열을 입력받아서 콘솔에 맵 정보를 출력하는 함수
 /// forEach를 사용하면 컨테이너의 요소들을 순차적으로 순환하면서 동작시키고 싶은 작업을 "클로저로" 넘겨줄 수 있음
-func printMapData(stageArray: [String]) {
+func printMapData(stage2DArray: [[String.Element]]) {
     print("")
-    stageArray.forEach({print($0)})
+    convert2DArrayTo1DArrayForPrint(stage2DArray).forEach({print($0)})
     print("")
 }
 
@@ -155,6 +164,14 @@ func convert2DArrayTo1DArray(_ twoDimentionArray: [[String.Element]]) -> [String
 }
 
 
+/// 변환된(숫자로 구성된) 2차원 배열을 콘솔 출력을 위한 1차원 배열로 바꾸는 함수
+func convert2DArrayTo1DArrayForPrint(_ mapData: [[String.Element]]) -> [String] {
+    let arrayOfNumber: [String] = convert2DArrayTo1DArray(mapData)
+    let arrayOfString: [String] = convertStringArray(stringArrayToConvert: arrayOfNumber, convertBy: dictionaryForReplace)
+    return arrayOfString
+}
+
+
 /// 플레이어 위치를 사용하여 지도에 원하는 값 입력
 func enterValueOnMap(playerLocation: (Int, Int), valueToEnter: String.Element, mapData: inout[[String.Element]]) {
     mapData[playerLocation.1-1][playerLocation.0-1] = valueToEnter
@@ -163,7 +180,7 @@ func enterValueOnMap(playerLocation: (Int, Int), valueToEnter: String.Element, m
 
 /// 플레이어가 원하는 위치로 이동할 수 없는 경우 출력할 에러 메시지와 지도 정보 출력
 func printErrorMessageAndMapData(playerInput: String.Element, mapData: [[String.Element]]) {
-    printMapData(stageArray: convertStringArray(stringArrayToConvert: convert2DArrayTo1DArray(mapData), convertBy: dictionaryForReplace))
+    printMapData(stage2DArray: mapData)
     print("\(playerInput): (경고!) 해당 명령을 수행할 수 없습니다.")
 }
 
@@ -191,7 +208,7 @@ func playerMove(playerInput: String.Element, playerLocation: inout(Int, Int), ma
     }
     
     enterValueOnMap(playerLocation: playerLocation, valueToEnter: "3", mapData: &mapData)
-    printMapData(stageArray: convertStringArray(stringArrayToConvert: convert2DArrayTo1DArray(mapData), convertBy: dictionaryForReplace))
+    printMapData(stage2DArray: mapData)
     
     switch playerInput {
     case "w":
@@ -226,11 +243,11 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
                 switch mapData[playerLocation.1-3][playerLocation.0-1] {
                 // 공이 이동될 공간이 공란인 경우
                 case " ":
-                    enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1-1), valueToEnter: "2", mapData: &mapData)
+                    enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1-2), valueToEnter: "2", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
                 // 공이 이동될 공간에 1(구멍)이 있는 경우
                 case "1":
-                    enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1-1), valueToEnter: "5", mapData: &mapData)
+                    enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1-2), valueToEnter: "5", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
                 // 공을 옮기려는 공간에 다른공 or 벽이 있을 때
                 default:
@@ -255,11 +272,11 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
                 switch mapData[playerLocation.1-1][playerLocation.0-3] {
                 // 공이 이동될 공간이 공란인 경우
                 case " ":
-                    enterValueOnMap(playerLocation: (playerLocation.0-1, playerLocation.1), valueToEnter: "2", mapData: &mapData)
+                    enterValueOnMap(playerLocation: (playerLocation.0-2, playerLocation.1), valueToEnter: "2", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
                 // 공이 이동될 공간에 1(구멍)이 있는 경우
                 case "1":
-                    enterValueOnMap(playerLocation: (playerLocation.0-1, playerLocation.1), valueToEnter: "5", mapData: &mapData)
+                    enterValueOnMap(playerLocation: (playerLocation.0-2, playerLocation.1), valueToEnter: "5", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
                 // 공을 옮기려는 공간에 다른공 or 벽이 있을 때
                 default:
@@ -337,22 +354,21 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
 
 
 
-
-
 func gameStart() {
     // 주어진 문자열 (맵 데이터)
     let mapData: String = readFile()
     // 변환 전 문자열이 사용된 맵 데이터 배열
     let beforeConvertMapDataArray: [[String]] = convertMapDataToEachStage(baseString: separateStringBasedNewLine(mapData))
     // 변환 후 문자열이 사용된 맵 데이터 배열
-    let afterConvertMapDataArray: [[String]] = convertMapDataToEachStage(baseString: separateStringBasedNewLine(convertString(stringToConvert: mapData, convertBy: dictionaryForReplace)))
+    let afterConvertMapDataArray: [[String]] = convertMapDataToEachStage(baseString: separateStringBasedNewLine(convertStringToNumber(stringToConvert: mapData, convertBy: dictionaryForReplace)))
     
-    // stage1 맵 정보 출력
-    printMapData(stageArray: beforeConvertMapDataArray[0])
     
     // 5개의 Stage(2차원 배열) 정보를 담은 3차원 배열
     let stageMapDataArray: [[[String.Element]]] = afterConvertMapDataArray.map({convertStringArrayTo2DArray($0)})
     
+    
+    // Stage Count
+    var stageCount: Int = 0
     
     // stage를 하나씩 받아서 처리하는 for문
     // eachStage = [[String.Element]]
@@ -360,8 +376,15 @@ func gameStart() {
         var playerInput: String = ""
         var eachStage: [[String.Element]] = eachStage
         var playerLocation: (Int, Int) = findPlayerLocation(mapData: eachStage)
+        var turnCount: Int = 0
         
-        while true {
+        // stage 맵 정보 출력
+        print("Stage \(stageCount+1)\n")
+        beforeConvertMapDataArray[stageCount].forEach({print($0)})
+        
+        stageCount += 1
+        
+        stageLoop: while true {
             print("\nSOKOBAN> ", terminator: "")
             playerInput = readLine() ?? ""
             
@@ -371,14 +394,22 @@ func gameStart() {
             }else {
                 for inputKey in playerInput {
                     changeMapDataBasedPlayerInput(playerInput: inputKey, playerLocation: &playerLocation, mapData: &eachStage)
+                    turnCount += 1
+                    if findNumber(mapData: eachStage, target: "2") == 0 {
+                        print("빠밤! Stage \(stageCount) 클리어!")
+                        print("턴수: \(turnCount)\n")
+                        continue gameLoop
+                    }
                 }
             }
         }
     }
+    if stageCount == 5 {
+        print("전체 게임을 클리어 하셨습니다!\n축하드립니다!")
+    }
 }
 
 gameStart()
-
 
 
 
