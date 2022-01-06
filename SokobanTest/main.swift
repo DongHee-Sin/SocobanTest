@@ -269,13 +269,13 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
                     enterValueOnMap(playerLocation: (playerLocation.0-2, playerLocation.1), valueToEnter: "2", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
                     printMapData(stage2DArray: mapData)
-                    print("\(playerInput): 위로 이동합니다.")
+                    print("\(playerInput): 왼쪽으로 이동합니다.")
                 // 공이 이동될 공간에 1(구멍)이 있는 경우
                 case "1":
                     enterValueOnMap(playerLocation: (playerLocation.0-2, playerLocation.1), valueToEnter: "c", mapData: &mapData)
                     playerMove(playerInput: playerInput, playerLocation: &playerLocation, mapData: &mapData)
                     printMapData(stage2DArray: mapData)
-                    print("\(playerInput): 위로 이동합니다.")
+                    print("\(playerInput): 왼쪽으로 이동합니다.")
                 // 공을 옮기려는 공간에 다른공 or 벽이 있을 때
                 default:
                     printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
@@ -402,6 +402,10 @@ func gameStart() {
             if playerInput == "q" {
                 print("bye~")
                 break gameLoop
+            }else if playerInput == "r" {
+                print("\n스테이지 초기화\nStage \(stageCount)\n")
+                beforeConvertMapDataArray[stageCount-1].forEach({print($0)})
+                eachStage = stageMapDataArray[stageCount-1]
             }else {
                 for inputKey in playerInput {
                     changeMapDataBasedPlayerInput(playerInput: inputKey, playerLocation: &playerLocation, mapData: &eachStage)
