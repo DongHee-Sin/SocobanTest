@@ -452,7 +452,7 @@ func gameStart() {
                 turnCount = 0
                 beforeConvertMapDataArray[stageCount-1].forEach({print($0)})
                 eachStage = stageMapDataArray[stageCount-1]
-                
+                playerLocation = findPlayerLocation(mapData: eachStage)
             }else {
                 for inputKey in playerInput {
                     changeMapDataBasedPlayerInput(playerInput: inputKey, playerLocation: &playerLocation, mapData: &eachStage)
