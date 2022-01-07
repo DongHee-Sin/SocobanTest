@@ -409,6 +409,8 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
 
 
 
+// [슬롯번호: [현재 스테이지: 2차원배열 맵 정보]]
+var saveSlot: [Int: [Int: [[String.Element]]]] = [Int: [Int: [[String.Element]]]]()
 
 func gameStart() {
     // 주어진 문자열 (맵 데이터)
@@ -444,16 +446,28 @@ func gameStart() {
             print("\nSOKOBAN> ", terminator: "")
             playerInput = readLine() ?? ""
             
-            if playerInput == "q" {
+            
+            switch playerInput {
+            case "q":
                 print("bye~")
                 break gameLoop
-            }else if playerInput == "r" {
+            case "r":
                 print("\n스테이지 초기화\nStage \(stageCount)\n")
                 turnCount = 0
                 beforeConvertMapDataArray[stageCount-1].forEach({print($0)})
                 eachStage = stageMapDataArray[stageCount-1]
                 playerLocation = findPlayerLocation(mapData: eachStage)
-            }else {
+            case let input where input.contains("S"):
+                let slotRange = 1...5
+                guard let slotNumber = playerInput.first?.wholeNumberValue, slotRange.contains(slotNumber) else {
+                    print("\n저장 슬롯은 5개 사용 가능합니다.\nex) 2S = 2번 슬롯에 현재 상태 저장")
+                    continue
+                }
+                saveSlot[slotNumber] = [stageCount: eachStage]
+                print("\(slotNumber)번 세이브에 진행상황을 저장합니다.")
+            case let input where input.contains("L"):
+                print("세이브된 맵 정보 가져오기!!")
+            default:
                 for inputKey in playerInput {
                     changeMapDataBasedPlayerInput(playerInput: inputKey, playerLocation: &playerLocation, mapData: &eachStage)
                     turnCount += 1
@@ -464,6 +478,28 @@ func gameStart() {
                     }
                 }
             }
+            
+            
+//            if playerInput == "q" {
+//                print("bye~")
+//                break gameLoop
+//            }else if playerInput == "r" {
+//                print("\n스테이지 초기화\nStage \(stageCount)\n")
+//                turnCount = 0
+//                beforeConvertMapDataArray[stageCount-1].forEach({print($0)})
+//                eachStage = stageMapDataArray[stageCount-1]
+//                playerLocation = findPlayerLocation(mapData: eachStage)
+//            }else {
+//                for inputKey in playerInput {
+//                    changeMapDataBasedPlayerInput(playerInput: inputKey, playerLocation: &playerLocation, mapData: &eachStage)
+//                    turnCount += 1
+//                    if findNumber(mapData: eachStage, target: "2") == 0 {
+//                        print("빠밤! Stage \(stageCount) 클리어!")
+//                        print("턴수: \(turnCount)\n")
+//                        continue gameLoop
+//                    }
+//                }
+//            }
         }
     }
     if stageCount == 5 {
@@ -481,5 +517,5 @@ gameStart()
 /// r 을 입력하면 현재 진행중인 스테이지를 초기화시키는 함수 작성 : o
 ///
 /// 01/07 (금)
-///  1. 0 상태의 o(공)을 밀어내면 다시 o, O으로 분리
+///  1. 0 상태의 o(공)을 밀어내면 다시 o, O으로 분리: o
 ///  2. 함수 정리
