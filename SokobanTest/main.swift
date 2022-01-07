@@ -449,8 +449,10 @@ func gameStart() {
                 break gameLoop
             }else if playerInput == "r" {
                 print("\n스테이지 초기화\nStage \(stageCount)\n")
+                turnCount = 0
                 beforeConvertMapDataArray[stageCount-1].forEach({print($0)})
                 eachStage = stageMapDataArray[stageCount-1]
+                
             }else {
                 for inputKey in playerInput {
                     changeMapDataBasedPlayerInput(playerInput: inputKey, playerLocation: &playerLocation, mapData: &eachStage)
