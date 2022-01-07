@@ -245,6 +245,18 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
                 default:
                     printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
                 }
+            // 이동하려는 공간에 c(공을 넣은 구멍)이 있는 경우
+            case "c":
+                switch mapData[playerLocation.1-3][playerLocation.0-1] {
+                    // 공을 밀어낼 공간이 공란인 경우
+                case " ":
+                    enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1-2), valueToEnter: "2", mapData: &mapData)
+                    enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1-1), valueToEnter: "1", mapData: &mapData)
+                    printMapData(stage2DArray: mapData)
+                    print("\(playerInput): 구멍에서 공을 밀어냅니다.")
+                default:
+                    printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+                }
             default:
                 printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
             }
@@ -277,6 +289,17 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
                     printMapData(stage2DArray: mapData)
                     print("\(playerInput): 왼쪽으로 이동합니다.")
                 // 공을 옮기려는 공간에 다른공 or 벽이 있을 때
+                default:
+                    printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+                }
+            case "c":
+                switch mapData[playerLocation.1-1][playerLocation.0-3] {
+                    // 공을 밀어낼 공간이 공란인 경우
+                case " ":
+                    enterValueOnMap(playerLocation: (playerLocation.0-2, playerLocation.1), valueToEnter: "2", mapData: &mapData)
+                    enterValueOnMap(playerLocation: (playerLocation.0-1, playerLocation.1), valueToEnter: "1", mapData: &mapData)
+                    printMapData(stage2DArray: mapData)
+                    print("\(playerInput): 구멍에서 공을 밀어냅니다.")
                 default:
                     printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
                 }
@@ -315,6 +338,17 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
                 default:
                     printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
                 }
+            case "c":
+                switch mapData[playerLocation.1+1][playerLocation.0-1] {
+                    // 공을 밀어낼 공간이 공란인 경우
+                case " ":
+                    enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1+2), valueToEnter: "2", mapData: &mapData)
+                    enterValueOnMap(playerLocation: (playerLocation.0, playerLocation.1+1), valueToEnter: "1", mapData: &mapData)
+                    printMapData(stage2DArray: mapData)
+                    print("\(playerInput): 구멍에서 공을 밀어냅니다.")
+                default:
+                    printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+                }
             default:
                 printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
             }
@@ -347,6 +381,17 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
                     printMapData(stage2DArray: mapData)
                     print("\(playerInput): 오른쪽으로 이동합니다.")
                 // 공을 옮기려는 공간에 다른공 or 벽이 있을 때
+                default:
+                    printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
+                }
+            case "c":
+                switch mapData[playerLocation.1-1][playerLocation.0+1] {
+                    // 공을 밀어낼 공간이 공란인 경우
+                case " ":
+                    enterValueOnMap(playerLocation: (playerLocation.0+2, playerLocation.1), valueToEnter: "2", mapData: &mapData)
+                    enterValueOnMap(playerLocation: (playerLocation.0+1, playerLocation.1), valueToEnter: "1", mapData: &mapData)
+                    printMapData(stage2DArray: mapData)
+                    print("\(playerInput): 구멍에서 공을 밀어냅니다.")
                 default:
                     printErrorMessageAndMapData(playerInput: playerInput, mapData: mapData)
                 }
@@ -431,4 +476,8 @@ gameStart()
 /// 스테이지 1의 지도와 프롬프트를 출력하면서 시작하는 함수 작성 : o
 /// o를 O에 이동시키는 함수 작성 : o
 /// 현재 stage에서 모든 O이 사라지면 해당 stage를 종료시키고 다음 Stage로 이동 : o
-/// r 을 입력하면 현재 진행중인 스테이지를 초기화시키는 함수 작성
+/// r 을 입력하면 현재 진행중인 스테이지를 초기화시키는 함수 작성 : o
+///
+/// 01/07 (금)
+///  1. 0 상태의 o(공)을 밀어내면 다시 o, O으로 분리
+///  2. 함수 정리
