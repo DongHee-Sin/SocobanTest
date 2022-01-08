@@ -428,6 +428,11 @@ func gameStart() {
     // Stage Count
     var stageCount: Int = 0
     
+    /// 되돌리기 기능 구현을 위한 변수
+    /// 이전 상태를 저장하는 변수, 되돌리기 전 상태를 저장하는 변수
+    var beforePlayerMove: [[String.Element]]? = nil
+    var beforeRevert: [[String.Element]]? = nil
+    
     // stage를 하나씩 받아서 처리하는 for문
     // eachStage = [[String.Element]]
     gameLoop: for eachStage in stageMapDataArray {
@@ -449,18 +454,18 @@ func gameStart() {
             
             
             switch playerInput {
-                // 게임 종료
+            // 게임 종료
             case "q":
                 print("bye~")
                 break gameLoop
-                // Stage 리셋
+            // Stage 리셋
             case "r":
                 print("\n스테이지 초기화\nStage \(stageCount)\n")
                 turnCount = 0
                 beforeConvertMapDataArray[stageCount-1].forEach({print($0)})
                 eachStage = stageMapDataArray[stageCount-1]
                 playerLocation = findPlayerLocation(mapData: eachStage)
-                // 현재 스테이지 저장
+            // 현재 스테이지 저장
             case let input where input.contains("S"):
                 guard let slotNumber = playerInput.first?.wholeNumberValue, slotRange.contains(slotNumber) else {
                     print("\n저장 슬롯은 5개 사용 가능합니다.\nex) 2S = 2번 슬롯에 현재 상태 저장")
@@ -469,8 +474,8 @@ func gameStart() {
                 //       저장 번호    =  [진행된 스테이지 번호 : 맵 정보]
                 saveSlot[slotNumber] = [stageCount: eachStage]
                 print("\(slotNumber)번 세이브에 진행상황을 저장합니다.")
-                // 저장된 스테이지 불러오기
-                // saveData 상수에는 [저장된 스테이지 번호: [[String.Element]]] 가 들어옴
+            // 저장된 스테이지 불러오기
+            // saveData 상수에는 [저장된 스테이지 번호: [[String.Element]]] 가 들어옴
             case let input where input.contains("L"):
                 guard let slotNumber = playerInput.first?.wholeNumberValue, let saveData = saveSlot[slotNumber] else {
                     print("\n저장 슬롯은 5개 사용 가능합니다.\n현재 \(saveSlot.keys.sorted())번 슬롯에 데이터가 저장되어 있습니다.")
@@ -481,40 +486,44 @@ func gameStart() {
                 playerLocation = findPlayerLocation(mapData: eachStage)
                 print("\n\(slotNumber)번 세이브에서 진행상황을 불러옵니다.\nStage \(stageCount)")
                 printMapData(stage2DArray: eachStage)
-                // 입력된 키로 플레이어 움직임 구현
+            // 이전 상태로 되돌리는 기능
+            case "u":
+                guard let beforeStage = beforePlayerMove else {
+                    print("되돌릴 데이터가 없습니다.")
+                    continue
+                }
+                beforeRevert = eachStage
+                print("\n한 턴 되돌리기를 실행합니다.")
+                eachStage = beforeStage
+                turnCount -= 1
+                playerLocation = findPlayerLocation(mapData: eachStage)
+                printMapData(stage2DArray: eachStage)
+            // u로 되돌렸던 상태를 취소
+            case "U":
+                guard let beforeStage = beforeRevert else {
+                    print("되돌리기를 취소할 데이터가 없습니다.")
+                    continue
+                }
+                eachStage = beforeStage
+                turnCount += 1
+                playerLocation = findPlayerLocation(mapData: eachStage)
+                printMapData(stage2DArray: eachStage)
+                beforeRevert = nil
+            // 입력된 키로 플레이어 움직임 구현
             default:
+                beforePlayerMove = eachStage
                 for inputKey in playerInput {
                     changeMapDataBasedPlayerInput(playerInput: inputKey, playerLocation: &playerLocation, mapData: &eachStage)
                     turnCount += 1
                     if findNumber(mapData: eachStage, target: "2") == 0 {
                         print("빠밤! Stage \(stageCount) 클리어!")
                         print("턴수: \(turnCount)\n")
+                        beforePlayerMove = nil
+                        beforeRevert = nil
                         continue gameLoop
                     }
                 }
             }
-            
-            
-//            if playerInput == "q" {
-//                print("bye~")
-//                break gameLoop
-//            }else if playerInput == "r" {
-//                print("\n스테이지 초기화\nStage \(stageCount)\n")
-//                turnCount = 0
-//                beforeConvertMapDataArray[stageCount-1].forEach({print($0)})
-//                eachStage = stageMapDataArray[stageCount-1]
-//                playerLocation = findPlayerLocation(mapData: eachStage)
-//            }else {
-//                for inputKey in playerInput {
-//                    changeMapDataBasedPlayerInput(playerInput: inputKey, playerLocation: &playerLocation, mapData: &eachStage)
-//                    turnCount += 1
-//                    if findNumber(mapData: eachStage, target: "2") == 0 {
-//                        print("빠밤! Stage \(stageCount) 클리어!")
-//                        print("턴수: \(turnCount)\n")
-//                        continue gameLoop
-//                    }
-//                }
-//            }
         }
     }
     if stageCount == 5 {
