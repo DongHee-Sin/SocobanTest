@@ -185,7 +185,7 @@ func printErrorMessageAndMapData(playerInput: String.Element, mapData: [[String.
 }
 
 
-
+// 입력된 값을 바탕으로 플레이어 좌표를 수정하고 맵 데이터에 반영하는 함수
 func playerMove(playerInput: String.Element, playerLocation: inout(Int, Int), mapData: inout[[String.Element]]) {
     
     switch playerInput {
@@ -211,7 +211,7 @@ func playerMove(playerInput: String.Element, playerLocation: inout(Int, Int), ma
 }
 
 
-/// 입력받은 키워드를 사용하여 플레ㅔ이어 위치를 이동
+/// 입력받은 키워드를 사용하여 플레이어 위치를 이동
 func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: inout(Int, Int), mapData: inout[[String.Element]]) {
     switch playerInput {
     case "w":
@@ -409,10 +409,9 @@ func changeMapDataBasedPlayerInput(playerInput: String.Element, playerLocation: 
 
 
 
-// [슬롯번호: [현재 스테이지: 2차원배열 맵 정보]]
-var saveSlot: [Int: [Int: [[String.Element]]]] = [Int: [Int: [[String.Element]]]]()
-
 func gameStart() {
+    // [슬롯번호: [현재 스테이지: 2차원배열 맵 정보]]
+    var saveSlot: [Int: [Int: [[String.Element]]]] = [Int: [Int: [[String.Element]]]]()
     // 주어진 문자열 (맵 데이터)
     let mapData: String = readFile()
     // 변환 전 문자열이 사용된 맵 데이터 배열
@@ -425,7 +424,7 @@ func gameStart() {
     let stageMapDataArray: [[[String.Element]]] = afterConvertMapDataArray.map({convertStringArrayTo2DArray($0)})
     
     
-    // Stage Count
+    // 현재 진행중인 스테이지가 몇 단계인지 나타내기 위한 count
     var stageCount: Int = 0
     
     /// 되돌리기 기능 구현을 위한 변수
@@ -532,14 +531,3 @@ func gameStart() {
 }
 
 gameStart()
-
-
-
-/// 스테이지 1의 지도와 프롬프트를 출력하면서 시작하는 함수 작성 : o
-/// o를 O에 이동시키는 함수 작성 : o
-/// 현재 stage에서 모든 O이 사라지면 해당 stage를 종료시키고 다음 Stage로 이동 : o
-/// r 을 입력하면 현재 진행중인 스테이지를 초기화시키는 함수 작성 : o
-///
-/// 01/07 (금)
-///  1. 0 상태의 o(공)을 밀어내면 다시 o, O으로 분리: o
-///  2. 함수 정리
