@@ -22,23 +22,26 @@ func readFile() -> String {
     return textForReturn
 }
 
-/// 문자열 변환을 위한 Dictionary
-let dictionaryForReplace: [String: String] = ["#": "0", "O": "1", "o": "2", "P": "3", "=": "4"]
-
 
 /// 입력된 문자열을 dictionary를 바탕으로 변환하여 리턴
 /// reduce에 후행클로저를 사용
 /// $0 = stringToConvert (String)
 /// $1 = convertBy (Dictionary)
 /// 초기값을 stringToConvert로 사용하고, 클로저로 어떤 변화를 줄지 작성함
-func convertStringToNumber(stringToConvert: String, convertBy: [String: String]) -> String {
-    return convertBy.reduce(stringToConvert) {
+func convertStringToNumber(stringToConvert: String) -> String {
+    /// 문자열 변환을 위한 Dictionary
+    let dictionaryForReplace: [String: String] = ["#": "0", "O": "1", "o": "2", "P": "3", "=": "4"]
+    
+    return dictionaryForReplace.reduce(stringToConvert) {
         $0.replacingOccurrences(of: $1.key, with: $1.value)
     }
 }
 
-func convertNumberToString(stringToConvert: String, convertBy: [String: String]) -> String {
-    return convertBy.reduce(stringToConvert) {
+func convertNumberToString(stringToConvert: String) -> String {
+    /// 문자열 변환을 위한 Dictionary
+    let dictionaryForReplace: [String: String] = ["#": "0", "O": "1", "o": "2", "P": "3", "=": "4"]
+    
+    return dictionaryForReplace.reduce(stringToConvert) {
         $0.replacingOccurrences(of: $1.value, with: $1.key)
     }.replacingOccurrences(of: "c", with: "0")
 }
@@ -50,8 +53,8 @@ func convertNumberToString(stringToConvert: String, convertBy: [String: String])
 /// 변환되지 않은 문자열로 구성된 1차원 배열로 만들기 위한 함수
 /// (콘솔 출력을 위해)
 /// 매개변수로 convert2DArrayTo1DArray함수의 결과를 사용
-func convertStringArray(stringArrayToConvert: [String], convertBy: [String: String]) -> [String] {
-    return stringArrayToConvert.map({convertNumberToString(stringToConvert: $0, convertBy: convertBy)})
+func convertStringArray(stringArrayToConvert: [String]) -> [String] {
+    return stringArrayToConvert.map({convertNumberToString(stringToConvert: $0)})
 }
 
 
@@ -167,7 +170,7 @@ func convert2DArrayTo1DArray(_ twoDimentionArray: [[String.Element]]) -> [String
 /// 변환된(숫자로 구성된) 2차원 배열을 콘솔 출력을 위한 1차원 배열로 바꾸는 함수
 func convert2DArrayTo1DArrayForPrint(_ mapData: [[String.Element]]) -> [String] {
     let arrayOfNumber: [String] = convert2DArrayTo1DArray(mapData)
-    let arrayOfString: [String] = convertStringArray(stringArrayToConvert: arrayOfNumber, convertBy: dictionaryForReplace)
+    let arrayOfString: [String] = convertStringArray(stringArrayToConvert: arrayOfNumber)
     return arrayOfString
 }
 
@@ -417,7 +420,7 @@ func gameStart() {
     // 변환 전 문자열이 사용된 맵 데이터 배열
     let beforeConvertMapDataArray: [[String]] = convertMapDataToEachStage(baseString: separateStringBasedNewLine(mapData))
     // 변환 후 문자열이 사용된 맵 데이터 배열
-    let afterConvertMapDataArray: [[String]] = convertMapDataToEachStage(baseString: separateStringBasedNewLine(convertStringToNumber(stringToConvert: mapData, convertBy: dictionaryForReplace)))
+    let afterConvertMapDataArray: [[String]] = convertMapDataToEachStage(baseString: separateStringBasedNewLine(convertStringToNumber(stringToConvert: mapData)))
     
     
     // 5개의 Stage(2차원 배열) 정보를 담은 3차원 배열
